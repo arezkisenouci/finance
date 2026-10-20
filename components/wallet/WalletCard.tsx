@@ -7,6 +7,8 @@ import { formatCurrency } from "@/lib/utils";
 interface WalletCardProps {
   balance: number;
   baseCurrency: string;
+  displayCurrency: string;
+  exchangeRate: number;
   convertedBalances?: Record<string, number>;
   onOpenAddExpense: () => void;
   onOpenAddFunds: () => void;
@@ -16,13 +18,17 @@ interface WalletCardProps {
 export function WalletCard({
   balance,
   baseCurrency,
+  displayCurrency,
+  exchangeRate = 1,
   convertedBalances = {},
   onOpenAddExpense,
   onOpenAddFunds,
   isLoading = false,
 }: WalletCardProps) {
-  const integerPart = Math.floor(balance);
-  const decimalPart = Math.abs(balance % 1).toFixed(2).slice(1);
+  // Convert balance according to active display currency
+  const activeAmount = balance * exchangeRate;
+  const integerPart = Math.floor(activeAmount);
+  const decimalPart = Math.abs(activeAmount % 1).toFixed(2).slice(1);
 
   return (
     <div className="relative overflow-hidden rounded-3xl p-5 bg-gradient-to-br from-slate-900 via-[#131B2E] to-slate-900 border border-slate-800 shadow-2xl">
@@ -38,37 +44,43 @@ export function WalletCard({
         </div>
         <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold text-[10px] border border-emerald-500/20 flex items-center gap-1">
           <ShieldCheck className="w-3 h-3" />
-          Live
+          Live {displayCurrency !== baseCurrency ? `(1 ${baseCurrency} = ${exchangeRate.toFixed(2)} ${displayCurrency})` : "Rates"}
         </span>
       </div>
 
       {/* Hero Balance Display */}
-      <div className="my-1.5 flex items-baseline">
-        <span className="text-xl font-bold text-slate-300 mr-1">$</span>
+      <div className="my-1.5 flex items-baseline flex-wrap">
         <span className="text-3xl font-extrabold tracking-tight text-white">
-          {isLoading ? "---.--" : integerPart.toLocaleString("en-US")}
+          {isLoading ? "---.--" : formatCurrency(activeAmount, displayCurrency)}
         </span>
-        <span className="text-slate-400 text-2xl font-semibold">{decimalPart}</span>
-        <span className="ml-2 text-xs font-semibold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
-          {baseCurrency}
-        </span>
+        {displayCurrency !== baseCurrency && (
+          <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-800/90 text-slate-400 border border-slate-700">
+            Native: ${balance.toFixed(2)} {baseCurrency}
+          </span>
+        )}
       </div>
 
       {/* Converted Currencies Live Preview */}
       <div className="text-[11px] text-slate-400 flex items-center gap-2 mb-5 overflow-x-auto whitespace-nowrap py-0.5">
-        {convertedBalances.EUR && (
+        {convertedBalances.EUR && displayCurrency !== "EUR" && (
           <span>≈ {formatCurrency(convertedBalances.EUR, "EUR")}</span>
         )}
-        {convertedBalances.GBP && (
+        {convertedBalances.GBP && displayCurrency !== "GBP" && (
           <>
             <span>•</span>
             <span>≈ {formatCurrency(convertedBalances.GBP, "GBP")}</span>
           </>
         )}
-        {convertedBalances.JPY && (
+        {convertedBalances.JPY && displayCurrency !== "JPY" && (
           <>
             <span>•</span>
             <span>≈ {formatCurrency(convertedBalances.JPY, "JPY")}</span>
+          </>
+        )}
+        {convertedBalances.DZD && displayCurrency !== "DZD" && (
+          <>
+            <span>•</span>
+            <span>≈ {formatCurrency(convertedBalances.DZD, "DZD")}</span>
           </>
         )}
       </div>

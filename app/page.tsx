@@ -12,15 +12,18 @@ import { QuickEntryKeypad } from "@/components/quick-actions/QuickEntryKeypad";
 import { DailyReminderBanner, PendingRoutine } from "@/components/routines/DailyReminderBanner";
 import { RoutinesManager } from "@/components/routines/RoutinesManager";
 import { WhatIfSimulatorView } from "@/components/simulator/WhatIfSimulatorView";
+import { CurrencyModal } from "@/components/currency/CurrencyModal";
 import { Category, Transaction } from "@/types/database";
 import { Sparkles, TrendingUp } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<NavTab>("wallet");
 
-  // Wallet State
+  // Wallet & Multi-Currency State
   const [balance, setBalance] = useState<number>(3840.50);
   const [baseCurrency, setBaseCurrency] = useState<string>("USD");
+  const [displayCurrency, setDisplayCurrency] = useState<string>("USD");
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [convertedBalances, setConvertedBalances] = useState<Record<string, number>>({});
   const [categories, setCategories] = useState<Category[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -28,13 +31,14 @@ export default function Home() {
   const [pendingRoutines, setPendingRoutines] = useState<PendingRoutine[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Modal & Keypad States
+  // Modal States
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
   const [isAddFundsOpen, setIsAddFundsOpen] = useState<boolean>(false);
+  const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState<boolean>(false);
   const [selectedQuickPreset, setSelectedQuickPreset] = useState<QuickActionPreset | null>(null);
   const [isKeypadOpen, setIsKeypadOpen] = useState<boolean>(false);
 
-  // Data Fetching
+  // Fetch Wallet
   const fetchWallet = useCallback(async () => {
     try {
       const res = await fetch("/api/wallet");
@@ -49,6 +53,20 @@ export default function Home() {
     }
   }, []);
 
+  // Fetch Currency Rates
+  const fetchRates = useCallback(async () => {
+    try {
+      const res = await fetch("/api/currency/rates");
+      const json = await res.json();
+      if (json.success && json.rates) {
+        setExchangeRates(json.rates);
+      }
+    } catch (err) {
+      console.error("Failed to fetch rates:", err);
+    }
+  }, []);
+
+  // Fetch Transactions
   const fetchTransactions = useCallback(async () => {
     try {
       const res = await fetch("/api/transactions?limit=20");
@@ -61,6 +79,7 @@ export default function Home() {
     }
   }, []);
 
+  // Fetch Categories
   const fetchCategories = useCallback(async () => {
     try {
       const res = await fetch("/api/categories");
@@ -73,6 +92,7 @@ export default function Home() {
     }
   }, []);
 
+  // Fetch Quick Presets
   const fetchQuickPresets = useCallback(async () => {
     try {
       const res = await fetch("/api/quick-actions");
@@ -85,6 +105,7 @@ export default function Home() {
     }
   }, []);
 
+  // Fetch Pending Daily Routines
   const fetchPendingRoutines = useCallback(async () => {
     try {
       const res = await fetch("/api/routines/pending-today");
@@ -101,13 +122,14 @@ export default function Home() {
     setIsLoading(true);
     await Promise.all([
       fetchWallet(),
+      fetchRates(),
       fetchTransactions(),
       fetchCategories(),
       fetchQuickPresets(),
       fetchPendingRoutines(),
     ]);
     setIsLoading(false);
-  }, [fetchWallet, fetchTransactions, fetchCategories, fetchQuickPresets, fetchPendingRoutines]);
+  }, [fetchWallet, fetchRates, fetchTransactions, fetchCategories, fetchQuickPresets, fetchPendingRoutines]);
 
   useEffect(() => {
     refreshAllData();
@@ -118,11 +140,14 @@ export default function Home() {
     setIsKeypadOpen(true);
   };
 
+  const activeExchangeRate = exchangeRates[displayCurrency] || 1;
+
   return (
     <div className="flex flex-col flex-1 pb-20">
       {/* Sticky Mobile Header */}
       <Header
-        currentCurrency={baseCurrency}
+        currentCurrency={displayCurrency}
+        onOpenCurrencySelector={() => setIsCurrencyModalOpen(true)}
         pendingRemindersCount={pendingRoutines.length}
         onOpenSettings={() => alert("Settings & Backup drawer will open in Phase 8")}
       />
@@ -135,6 +160,8 @@ export default function Home() {
             <WalletCard
               balance={balance}
               baseCurrency={baseCurrency}
+              displayCurrency={displayCurrency}
+              exchangeRate={activeExchangeRate}
               convertedBalances={convertedBalances}
               onOpenAddExpense={() => setIsAddExpenseOpen(true)}
               onOpenAddFunds={() => setIsAddFundsOpen(true)}
@@ -237,6 +264,15 @@ export default function Home() {
         onClose={() => setIsKeypadOpen(false)}
         preset={selectedQuickPreset}
         onSuccess={refreshAllData}
+      />
+
+      {/* Multi-Currency Selection Modal */}
+      <CurrencyModal
+        isOpen={isCurrencyModalOpen}
+        onClose={() => setIsCurrencyModalOpen(false)}
+        selectedCurrency={displayCurrency}
+        onSelectCurrency={setDisplayCurrency}
+        rates={exchangeRates}
       />
     </div>
   );

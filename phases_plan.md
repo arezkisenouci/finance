@@ -281,21 +281,21 @@ flowchart TD
 - `system_design.md` Section 4.6 (Multi-Currency Architecture) & `stack.md` Section 3.5.
 
 ### Tasks
-- [ ] **Backend Route Handlers & Integration**:
+- [x] **Backend Route Handlers & Integration**:
   - `lib/forex.ts`: Service integrating **Frankfurter API** (primary free ECB rates) and **ExchangeRate-API** (fallback for 160+ currencies like DZD, MAD, EGP).
   - Caching logic: Persist rates in `exchange_rates_cache` inside `data/db.json` with a 12-hour timestamp TTL.
   - `GET /api/currency/rates` — serves cached rates (or refreshes from external API if older than 12h).
   - `POST /api/currency/convert` — converts arbitrary amounts between two currencies.
   - `PATCH /api/wallet/base-currency` — switches the wallet's native base currency.
-- [ ] **Frontend UI Components**:
+- [x] **Frontend UI Components**:
   - `CurrencySelector`: Compact dropdown pill in the top header (`[USD ▼]`, `[EUR ▼]`, `[GBP ▼]`, `[JPY ▼]`, `[DZD ▼]`, etc.).
   - Secondary currency badge on the wallet card (e.g., `$3,840.50 USD ≈ €3,552.46 EUR`).
   - Toggle to preview transactions in the selected currency.
 
 ### Verification & Git Gate
-- [ ] Query rates while offline or simulate API failure $\to$ system seamlessly serves cached rates from `db.json`.
-- [ ] Switch currency to `EUR` $\to$ wallet hero and transactions accurately display converted amounts using the cached rate.
-- [ ] **Push Phase to GitHub**:
+- [x] Query rates while offline or simulate API failure $\to$ system seamlessly serves cached rates from `db.json`.
+- [x] Switch currency to `EUR` $\to$ wallet hero and transactions accurately display converted amounts using the cached rate.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-6): implement live forex rates with 12h cache and currency switcher"
@@ -383,6 +383,6 @@ flowchart TD
 | **Phase 3** | The "Big 4" Quick Actions | `COMPLETED` |
 | **Phase 4** | Daily Routine Tracker & Daily Check-In | `COMPLETED` |
 | **Phase 5** | What-If Habit & Savings Simulator | `COMPLETED` |
-| **Phase 6** | Live Multi-Currency Engine | `PENDING` |
+| **Phase 6** | Live Multi-Currency Engine | `COMPLETED` |
 | **Phase 7** | Period Analytics Dashboard | `PENDING` |
 | **Phase 8** | PWA Offline & System Hardening | `PENDING` |

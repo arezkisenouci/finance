@@ -5,14 +5,15 @@ import { SlidersHorizontal, Bell, ChevronDown } from "lucide-react";
 
 interface HeaderProps {
   currentCurrency?: string;
-  onCurrencyChange?: (currency: string) => void;
+  onOpenCurrencySelector?: () => void;
   pendingRemindersCount?: number;
   onOpenSettings?: () => void;
 }
 
 export function Header({
   currentCurrency = "USD",
-  pendingRemindersCount = 1,
+  onOpenCurrencySelector,
+  pendingRemindersCount = 0,
   onOpenSettings,
 }: HeaderProps) {
   return (
@@ -37,8 +38,11 @@ export function Header({
 
       {/* Right Actions: Currency Pill & Reminder Bell */}
       <div className="flex items-center gap-2">
-        <button className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-200 hover:border-slate-700 transition active:scale-95">
-          <span>{currentCurrency}</span>
+        <button
+          onClick={onOpenCurrencySelector}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-bold text-slate-200 hover:border-emerald-500/40 hover:text-white transition active:scale-95 shadow-sm"
+        >
+          <span className="text-emerald-400 font-extrabold">{currentCurrency}</span>
           <ChevronDown className="w-3 h-3 text-slate-400" />
         </button>
 
