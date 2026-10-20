@@ -70,21 +70,21 @@ flowchart TD
 **Objective**: Initialize the repository with the approved modern stack, establish mobile-first UI layout constraints, and setup UI component libraries.
 
 ### Tasks
-- [ ] Initialize Next.js 15 (App Router) project with TypeScript and ESLint.
-- [ ] Configure Tailwind CSS v4 and install `lucide-react`, `clsx`, `tailwind-merge`, and `canvas-confetti`.
-- [ ] Install and configure headless primitives via `shadcn/ui` (Dialog, Drawer/BottomSheet, DropdownMenu, Tabs, Tooltip).
-- [ ] Setup Framer Motion for mobile animations.
-- [ ] Create the **Mobile Shell Layout** (`app/layout.tsx`):
+- [x] Initialize Next.js 15 (App Router) project with TypeScript and ESLint.
+- [x] Configure Tailwind CSS and install `lucide-react`, `clsx`, `tailwind-merge`, and `canvas-confetti`.
+- [x] Install and configure headless primitives via `shadcn/ui` (Dialog, Drawer/BottomSheet, DropdownMenu, Tabs, Tooltip).
+- [x] Setup Framer Motion for mobile animations.
+- [x] Create the **Mobile Shell Layout** (`app/layout.tsx`):
   - Lock container to `max-w-md mx-auto min-h-screen bg-slate-950 text-slate-50 flex flex-col`.
   - Implement the sticky top header (Settings icon, App Title, Currency Badge, Notification Bell).
   - Implement the persistent bottom navigation bar (Wallet, Analytics, Routines, What-If).
-- [ ] Setup PWA baseline (`manifest.json` and meta viewport tags for iOS/Android).
+- [x] Setup PWA baseline (`manifest.json` and meta viewport tags for iOS/Android).
 
 ### Verification & Git Gate
-- [ ] Run `npm run dev` / `pnpm dev`.
-- [ ] Verify the mobile viewport looks like a native phone screen centered on desktop and full-width on mobile devtools.
-- [ ] All 4 bottom navigation tabs toggle active states without layout jitter.
-- [ ] **Push Phase to GitHub**:
+- [x] Run `npm run dev` / `pnpm dev` / `npm run build`.
+- [x] Verify the mobile viewport looks like a native phone screen centered on desktop and full-width on mobile devtools.
+- [x] All 4 bottom navigation tabs toggle active states without layout jitter.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-0): scaffold Next.js 15 app with mobile shell and PWA baseline"
@@ -376,8 +376,8 @@ flowchart TD
 
 | Phase | Milestone | Git Commit & Push Status |
 | :--- | :--- | :--- |
-| **Initial Setup** | Documentation & Architecture Baseline | `PENDING` |
-| **Phase 0** | Project Scaffolding & Mobile Shell | `PENDING` |
+| **Initial Setup** | Documentation & Architecture Baseline | `COMPLETED` |
+| **Phase 0** | Project Scaffolding & Mobile Shell | `COMPLETED` |
 | **Phase 1** | Atomic Lowdb JSON Database Layer | `PENDING` |
 | **Phase 2** | Digital Wallet Hero & Transaction Ledger | `PENDING` |
 | **Phase 3** | The "Big 4" Quick Actions | `PENDING` |
