@@ -31,6 +31,7 @@ yarn-error.log*
 # database backups & temp files
 /data/backups/
 /data/*.tmp
+.playwright-mcp/
 
 
 # typescript

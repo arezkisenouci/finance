@@ -1,8 +1,8 @@
 {
   "wallet": {
-    "balance": 3682.5,
+    "balance": 3005.56,
     "baseCurrency": "USD",
-    "updatedAt": "2026-10-20T20:17:23.870Z"
+    "updatedAt": "2026-10-20T20:37:14.277Z"
   },
   "categories": [
     {
@@ -87,6 +87,71 @@
     }
   ],
   "transactions": [
+    {
+      "id": "tx_1792528634273_s8cf",
+      "title": "pc",
+      "amount": 669.14,
+      "type": "EXPENSE",
+      "categoryId": "cat_tech",
+      "categoryName": "Electronics & Tech",
+      "isQuickAction": false,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-20T20:37:14.229Z",
+      "notes": "Entered as 90000 DZD"
+    },
+    {
+      "id": "tx_quick_1792528546743_b2ko",
+      "title": "Quick Dinner",
+      "amount": 0.74,
+      "type": "EXPENSE",
+      "categoryId": "cat_dinner",
+      "categoryName": "Dinner",
+      "isQuickAction": true,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-20T20:35:46.746Z",
+      "notes": "100 DZD"
+    },
+    {
+      "id": "tx_quick_1792528534549_g8aq",
+      "title": "Quick Transport",
+      "amount": 2.6,
+      "type": "EXPENSE",
+      "categoryId": "cat_transport",
+      "categoryName": "Transport",
+      "isQuickAction": true,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-20T20:35:34.552Z",
+      "notes": "350 DZD"
+    },
+    {
+      "id": "tx_quick_1792528523857_qgob",
+      "title": "Quick Lunch",
+      "amount": 2.97,
+      "type": "EXPENSE",
+      "categoryId": "cat_lunch",
+      "categoryName": "Lunch",
+      "isQuickAction": true,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-20T20:35:23.863Z",
+      "notes": "400 DZD"
+    },
+    {
+      "id": "tx_quick_1792528507968_uxbl",
+      "title": "Quick Breakfast",
+      "amount": 1.49,
+      "type": "EXPENSE",
+      "categoryId": "cat_breakfast",
+      "categoryName": "Breakfast",
+      "isQuickAction": true,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-20T20:35:07.974Z",
+      "notes": "200 DZD"
+    },
     {
       "id": "tx_rt_1792527443874_h31q",
       "title": "Packet of Cigarettes",
