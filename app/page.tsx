@@ -11,8 +11,9 @@ import { QuickActionsBar, QuickActionPreset } from "@/components/quick-actions/Q
 import { QuickEntryKeypad } from "@/components/quick-actions/QuickEntryKeypad";
 import { DailyReminderBanner, PendingRoutine } from "@/components/routines/DailyReminderBanner";
 import { RoutinesManager } from "@/components/routines/RoutinesManager";
+import { WhatIfSimulatorView } from "@/components/simulator/WhatIfSimulatorView";
 import { Category, Transaction } from "@/types/database";
-import { Flame, Sparkles, TrendingUp } from "lucide-react";
+import { Sparkles, TrendingUp } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<NavTab>("wallet");
@@ -152,24 +153,24 @@ export default function Home() {
               onCheckInCompleted={refreshAllData}
             />
 
-            {/* 4. What-If Simulator Teaser */}
+            {/* 4. What-If Simulator Teaser Card */}
             <div
-              className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition cursor-pointer"
+              className="p-4 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/30 hover:border-indigo-500/50 transition cursor-pointer active:scale-95 shadow-sm"
               onClick={() => setActiveTab("simulator")}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-indigo-500/15 text-indigo-400">
+                  <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-semibold text-slate-200">What-If Savings Simulator</h4>
-                    <p className="text-[11px] text-slate-400">
-                      If you quit cigarettes: <span className="text-emerald-400 font-semibold">+$240/mo</span> saved
+                    <h4 className="text-xs font-bold text-white">What-If Habit Simulator</h4>
+                    <p className="text-[11px] text-slate-300">
+                      If you quit cigarettes: <span className="text-emerald-400 font-bold">+$240/mo</span> saved
                     </p>
                   </div>
                 </div>
-                <TrendingUp className="w-4 h-4 text-slate-500" />
+                <TrendingUp className="w-4 h-4 text-indigo-400" />
               </div>
             </div>
 
@@ -208,13 +209,7 @@ export default function Home() {
         )}
 
         {activeTab === "simulator" && (
-          <div className="p-8 text-center text-slate-400 space-y-2">
-            <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300">
-              <Sparkles className="w-6 h-6 text-indigo-400" />
-            </div>
-            <h3 className="text-sm font-semibold text-slate-200">What-If Habit Simulator</h3>
-            <p className="text-xs">Habit expense sliders, monthly/yearly projections, and compound interest calculations will be connected in Phase 5.</p>
-          </div>
+          <WhatIfSimulatorView />
         )}
       </main>
 

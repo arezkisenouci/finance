@@ -249,10 +249,10 @@ flowchart TD
 - `system_design.md` Section 4.3 (What-If Habit Simulator).
 
 ### Tasks
-- [ ] **Backend Route Handlers**:
+- [x] **Backend Route Handlers**:
   - `GET /api/simulator/routines` — calculates projections (1M, 3M, 6M, 1Y, 5Y with 7% compound interest) for all configured routines.
   - `POST /api/simulator/calculate` — dynamic endpoint accepting arbitrary `{ dailyExpenseAmount, durationMonths, annualInterestRate }`.
-- [ ] **Frontend UI Components**:
+- [x] **Frontend UI Components**:
   - `WhatIfSimulatorCard`: Engaging dashboard card showing immediate monthly and yearly savings.
   - `SimulatorModal / Page`:
     - Sliders to adjust daily spend (e.g., $1 to $50/day).
@@ -261,9 +261,9 @@ flowchart TD
     - Real-world purchasing power milestones (e.g., *"In 1 month you save $240 = Sony Headphones; in 1 year you save $2,920 = High-end PC"*).
 
 ### Verification & Git Gate
-- [ ] Select "Cigarettes ($8/day)" $\to$ verifies that 30-day projection equals `$240.00`, 365-day projection equals `$2,920.00`, and 5-year compound growth is calculated accurately.
-- [ ] Sliders respond smoothly at 60 FPS without UI stutter.
-- [ ] **Push Phase to GitHub**:
+- [x] Select "Cigarettes ($8/day)" $\to$ verifies that 30-day projection equals `$240.00`, 365-day projection equals `$2,920.00`, and 5-year compound growth is calculated accurately.
+- [x] Sliders respond smoothly at 60 FPS without UI stutter.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-5): build What-If habit savings simulator and compound growth projections"
@@ -382,7 +382,7 @@ flowchart TD
 | **Phase 2** | Digital Wallet Hero & Transaction Ledger | `COMPLETED` |
 | **Phase 3** | The "Big 4" Quick Actions | `COMPLETED` |
 | **Phase 4** | Daily Routine Tracker & Daily Check-In | `COMPLETED` |
-| **Phase 5** | What-If Habit & Savings Simulator | `PENDING` |
+| **Phase 5** | What-If Habit & Savings Simulator | `COMPLETED` |
 | **Phase 6** | Live Multi-Currency Engine | `PENDING` |
 | **Phase 7** | Period Analytics Dashboard | `PENDING` |
 | **Phase 8** | PWA Offline & System Hardening | `PENDING` |
