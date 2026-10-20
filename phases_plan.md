@@ -143,14 +143,14 @@ flowchart TD
 - `system_design.md` Section 3 (Wireframe) & Section 4.1 (Wallet Logic).
 
 ### Tasks
-- [ ] **Backend Route Handlers**:
+- [x] **Backend Route Handlers**:
   - `GET /api/wallet` — returns current balance, base currency, and last update.
   - `POST /api/wallet/deposit` — adds money, logs income transaction, updates balance.
   - `GET /api/transactions` — fetches list with filtering by period, type, and pagination.
   - `POST /api/transactions` — records expense, deducts amount from wallet, saves to JSON.
   - `DELETE /api/transactions/:id` — deletes transaction, restores money back to wallet.
   - `POST /api/transactions/:id/refund` — flags transaction as `isRefunded: true`, adds refund record, restores balance.
-- [ ] **Frontend UI Components**:
+- [x] **Frontend UI Components**:
   - `WalletCard`: Apple Wallet-style dark card displaying formatted balance with count-up animation (`Framer Motion`).
   - `AddExpenseDrawer`: Bottom-sheet modal with fields for Title (e.g. "Gaming PC"), Amount ($1250), Category selector, and "Deduct from Wallet" button.
   - `AddFundsModal`: Quick dialog to add income / salary deposits.
@@ -158,10 +158,10 @@ flowchart TD
   - `TransactionItemActions`: Slide-to-reveal or dropdown menu on each item with **[Refund / Return]** and **[Delete / Mistake Undo]** buttons.
 
 ### Verification & Git Gate
-- [ ] Log an expense of `$1,200` ("Gaming PC") $\to$ wallet balance decreases from `$3,840.50` to `$2,640.50`.
-- [ ] Tap **Delete** on the PC entry $\to$ balance restores back to `$3,840.50`.
-- [ ] Log the expense again and tap **Refund** $\to$ balance restores back to `$3,840.50`, entry shows badge `[Refunded]`, and a refund transaction appears in history.
-- [ ] **Push Phase to GitHub**:
+- [x] Log an expense of `$1,200` ("Gaming PC") $\to$ wallet balance decreases from `$3,840.50` to `$2,640.50`.
+- [x] Tap **Delete** on the PC entry $\to$ balance restores back to `$3,840.50`.
+- [x] Log the expense again and tap **Refund** $\to$ balance restores back to `$3,840.50`, entry shows badge `[Refunded]`, and a refund transaction appears in history.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-2): build digital wallet card, balance mutations, and transaction ledger"
@@ -379,7 +379,7 @@ flowchart TD
 | **Initial Setup** | Documentation & Architecture Baseline | `COMPLETED` |
 | **Phase 0** | Project Scaffolding & Mobile Shell | `COMPLETED` |
 | **Phase 1** | Atomic Lowdb JSON Database Layer | `COMPLETED` |
-| **Phase 2** | Digital Wallet Hero & Transaction Ledger | `PENDING` |
+| **Phase 2** | Digital Wallet Hero & Transaction Ledger | `COMPLETED` |
 | **Phase 3** | The "Big 4" Quick Actions | `PENDING` |
 | **Phase 4** | Daily Routine Tracker & Daily Check-In | `PENDING` |
 | **Phase 5** | What-If Habit & Savings Simulator | `PENDING` |
