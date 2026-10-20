@@ -9,6 +9,8 @@ import { AddFundsModal } from "@/components/wallet/AddFundsModal";
 import { TransactionList } from "@/components/wallet/TransactionList";
 import { QuickActionsBar, QuickActionPreset } from "@/components/quick-actions/QuickActionsBar";
 import { QuickEntryKeypad } from "@/components/quick-actions/QuickEntryKeypad";
+import { DailyReminderBanner, PendingRoutine } from "@/components/routines/DailyReminderBanner";
+import { RoutinesManager } from "@/components/routines/RoutinesManager";
 import { Category, Transaction } from "@/types/database";
 import { Flame, Sparkles, TrendingUp } from "lucide-react";
 
@@ -22,6 +24,7 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [quickPresets, setQuickPresets] = useState<QuickActionPreset[]>([]);
+  const [pendingRoutines, setPendingRoutines] = useState<PendingRoutine[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Modal & Keypad States
@@ -81,6 +84,18 @@ export default function Home() {
     }
   }, []);
 
+  const fetchPendingRoutines = useCallback(async () => {
+    try {
+      const res = await fetch("/api/routines/pending-today");
+      const json = await res.json();
+      if (json.success) {
+        setPendingRoutines(json.routines || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch pending routines:", err);
+    }
+  }, []);
+
   const refreshAllData = useCallback(async () => {
     setIsLoading(true);
     await Promise.all([
@@ -88,9 +103,10 @@ export default function Home() {
       fetchTransactions(),
       fetchCategories(),
       fetchQuickPresets(),
+      fetchPendingRoutines(),
     ]);
     setIsLoading(false);
-  }, [fetchWallet, fetchTransactions, fetchCategories, fetchQuickPresets]);
+  }, [fetchWallet, fetchTransactions, fetchCategories, fetchQuickPresets, fetchPendingRoutines]);
 
   useEffect(() => {
     refreshAllData();
@@ -106,7 +122,7 @@ export default function Home() {
       {/* Sticky Mobile Header */}
       <Header
         currentCurrency={baseCurrency}
-        pendingRemindersCount={1}
+        pendingRemindersCount={pendingRoutines.length}
         onOpenSettings={() => alert("Settings & Backup drawer will open in Phase 8")}
       />
 
@@ -131,38 +147,10 @@ export default function Home() {
             />
 
             {/* 3. Daily Routine Reminder Prompt */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/30 shadow-md">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400 shrink-0 mt-0.5">
-                  <Flame className="w-4 h-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
-                      Daily Routine Prompt
-                    </span>
-                    <span className="text-[10px] text-slate-400">Today</span>
-                  </div>
-                  <p className="text-xs font-semibold text-slate-200">
-                    Did you buy a packet of cigarettes today ($8.00)?
-                  </p>
-                  <div className="flex items-center gap-2 mt-3">
-                    <button
-                      onClick={() => alert("Skipped routine! Streak +1 and money saved (Phase 4)")}
-                      className="flex-1 py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition active:scale-95"
-                    >
-                      ❌ No, Skipped
-                    </button>
-                    <button
-                      onClick={() => alert("Confirmed routine! $8.00 deducted from wallet (Phase 4)")}
-                      className="flex-1 py-1.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition active:scale-95"
-                    >
-                      ✅ Yes, Bought
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <DailyReminderBanner
+              pendingRoutines={pendingRoutines}
+              onCheckInCompleted={refreshAllData}
+            />
 
             {/* 4. What-If Simulator Teaser */}
             <div
@@ -216,13 +204,7 @@ export default function Home() {
         )}
 
         {activeTab === "routines" && (
-          <div className="p-8 text-center text-slate-400 space-y-2">
-            <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300">
-              <Flame className="w-6 h-6 text-amber-400" />
-            </div>
-            <h3 className="text-sm font-semibold text-slate-200">Daily Routines & Habits</h3>
-            <p className="text-xs">Routine configuration, daily check-in histories, and streaks will be connected in Phase 4.</p>
-          </div>
+          <RoutinesManager onDataChanged={refreshAllData} />
         )}
 
         {activeTab === "simulator" && (

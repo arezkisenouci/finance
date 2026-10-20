@@ -212,7 +212,7 @@ flowchart TD
 - `system_design.md` Section 4.2 (Daily Routine & Check-In System).
 
 ### Tasks
-- [ ] **Backend Route Handlers**:
+- [x] **Backend Route Handlers**:
   - `GET /api/routines` — retrieves all routines with streak stats and monthly spend/saved aggregates.
   - `POST /api/routines` — creates a new routine (title, cost, frequency, reminderTime).
   - `PATCH /api/routines/:id` & `DELETE /api/routines/:id` — edits or disables a routine.
@@ -220,7 +220,7 @@ flowchart TD
   - `POST /api/routines/:id/checkin` — records user action:
     - If `CONFIRMED` (Yes): creates an expense transaction, deducts cost from wallet, updates log.
     - If `SKIPPED` (No): leaves wallet balance untouched, increments skipped streak, marks money as saved.
-- [ ] **Frontend UI Components**:
+- [x] **Frontend UI Components**:
   - `DailyReminderBanner`: High-priority card on the main dashboard if a routine is pending for today:
     > *"Did you buy a packet of cigarettes today ($8.00)?"*
     > `[ ❌ No, Skipped! ]`   `[ ✅ Yes, Bought ]`
@@ -228,10 +228,10 @@ flowchart TD
   - `CelebrationEffect`: Trigger confetti burst (`canvas-confetti`) when user clicks `[No, Skipped!]` along with a toast: *"Saved $8.00 today! Streak: X days!"*.
 
 ### Verification & Git Gate
-- [ ] Set up a routine: "Packet of Cigarettes" at `$8.00/day`.
-- [ ] When clicking `[Yes, Bought]`: an `$8.00` expense is added to the ledger, wallet balance reduces by `$8.00`, and reminder banner disappears for the day.
-- [ ] Reset/test with `[No, Skipped!]`: wallet balance does not decrease, streak increments by 1, and confetti triggers.
-- [ ] **Push Phase to GitHub**:
+- [x] Set up a routine: "Packet of Cigarettes" at `$8.00/day`.
+- [x] When clicking `[Yes, Bought]`: an `$8.00` expense is added to the ledger, wallet balance reduces by `$8.00`, and reminder banner disappears for the day.
+- [x] Reset/test with `[No, Skipped!]`: wallet balance does not decrease, streak increments by 1, and confetti triggers.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-4): add daily routine tracking, check-in banner, and streak celebration"
@@ -381,7 +381,7 @@ flowchart TD
 | **Phase 1** | Atomic Lowdb JSON Database Layer | `COMPLETED` |
 | **Phase 2** | Digital Wallet Hero & Transaction Ledger | `COMPLETED` |
 | **Phase 3** | The "Big 4" Quick Actions | `COMPLETED` |
-| **Phase 4** | Daily Routine Tracker & Daily Check-In | `PENDING` |
+| **Phase 4** | Daily Routine Tracker & Daily Check-In | `COMPLETED` |
 | **Phase 5** | What-If Habit & Savings Simulator | `PENDING` |
 | **Phase 6** | Live Multi-Currency Engine | `PENDING` |
 | **Phase 7** | Period Analytics Dashboard | `PENDING` |
