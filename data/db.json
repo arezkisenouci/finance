@@ -1,0 +1,120 @@
+{
+  "wallet": {
+    "balance": 3840.5,
+    "baseCurrency": "USD",
+    "updatedAt": "2026-10-20T19:47:40.828Z"
+  },
+  "categories": [
+    {
+      "id": "cat_breakfast",
+      "name": "Breakfast",
+      "icon": "Croissant",
+      "isQuickAction": true
+    },
+    {
+      "id": "cat_lunch",
+      "name": "Lunch",
+      "icon": "Salad",
+      "isQuickAction": true
+    },
+    {
+      "id": "cat_dinner",
+      "name": "Dinner",
+      "icon": "Utensils",
+      "isQuickAction": true
+    },
+    {
+      "id": "cat_transport",
+      "name": "Transport",
+      "icon": "Car",
+      "isQuickAction": true
+    },
+    {
+      "id": "cat_habits",
+      "name": "Habits & Routines",
+      "icon": "Flame",
+      "isQuickAction": false
+    },
+    {
+      "id": "cat_tech",
+      "name": "Electronics & Tech",
+      "icon": "Laptop",
+      "isQuickAction": false
+    },
+    {
+      "id": "cat_shopping",
+      "name": "Shopping",
+      "icon": "ShoppingBag",
+      "isQuickAction": false
+    },
+    {
+      "id": "cat_misc",
+      "name": "Miscellaneous",
+      "icon": "Receipt",
+      "isQuickAction": false
+    }
+  ],
+  "routines": [
+    {
+      "id": "rt_cigg_001",
+      "title": "Packet of Cigarettes",
+      "cost": 8,
+      "currency": "USD",
+      "categoryId": "cat_habits",
+      "frequency": "DAILY",
+      "reminderTime": "20:00",
+      "isActive": true,
+      "createdAt": "2026-10-20T19:47:40.829Z"
+    }
+  ],
+  "routine_logs": [
+    {
+      "id": "rtl_sample_01",
+      "routineId": "rt_cigg_001",
+      "date": "2026-10-19",
+      "status": "SKIPPED",
+      "savedAmount": 8,
+      "loggedAt": "2026-10-19T19:47:40.829Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx_init_001",
+      "title": "Custom Gaming PC Build",
+      "amount": 1250,
+      "type": "EXPENSE",
+      "categoryId": "cat_tech",
+      "categoryName": "Electronics & Tech",
+      "isQuickAction": false,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-18T19:47:40.829Z",
+      "notes": "High performance workstation upgrade"
+    },
+    {
+      "id": "tx_init_002",
+      "title": "Weekly Grocery Run",
+      "amount": 65.2,
+      "type": "EXPENSE",
+      "categoryId": "cat_shopping",
+      "categoryName": "Shopping",
+      "isQuickAction": false,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-19T19:47:40.829Z"
+    }
+  ],
+  "exchange_rates_cache": {
+    "base": "USD",
+    "updatedAt": "2026-10-20T19:47:40.829Z",
+    "rates": {
+      "EUR": 0.925,
+      "GBP": 0.785,
+      "JPY": 151.7,
+      "CAD": 1.38,
+      "DZD": 134.5,
+      "MAD": 9.95,
+      "EGP": 48.8
+    }
+  }
+}

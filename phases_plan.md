@@ -101,8 +101,8 @@ flowchart TD
 - `system_design.md` Section 5 (Schema Specification) & Section 6 (Concurrency & Atomic Writes).
 
 ### Tasks
-- [ ] Install `lowdb` (v7+) and `zod`.
-- [ ] Define TypeScript interfaces and Zod validation schemas for all entities in `types/database.ts`:
+- [x] Install `lowdb` (v7+) and `zod`.
+- [x] Define TypeScript interfaces and Zod validation schemas for all entities in `types/database.ts`:
   - `WalletSchema`
   - `CategorySchema`
   - `RoutineSchema`
@@ -110,22 +110,22 @@ flowchart TD
   - `TransactionSchema`
   - `ExchangeRatesCacheSchema`
   - `DatabaseSchema`
-- [ ] Create the database client in `lib/db.ts`:
+- [x] Create the database client in `lib/db.ts`:
   - Initialize `data/db.json` with fallback defaults if the file does not exist.
   - Implement read/write helper methods with concurrency locking.
   - Implement atomic write safety via Steno.
-- [ ] Create database seed script (`scripts/seed.ts` or auto-init on boot):
+- [x] Create database seed script (`scripts/seed.ts` or auto-init on boot):
   - Initial balance: `$3,840.50` (USD).
   - Seed the 4 quick categories: Breakfast, Lunch, Dinner, Transport.
   - Seed sample categories: Habits & Routines, Tech & Electronics, Miscellaneous.
   - Seed initial routine: "Packet of Cigarettes" ($8.00/day).
-- [ ] Implement automated backup utility in `lib/backup.ts` to archive rolling daily snapshots into `data/backups/db-YYYY-MM-DD.json`.
+- [x] Implement automated backup utility in `lib/backup.ts` to archive rolling daily snapshots into `data/backups/db-YYYY-MM-DD.json`.
 
 ### Verification & Git Gate
-- [ ] Run standalone test script that writes, reads, and updates `data/db.json`.
-- [ ] Intentionally verify atomic file rename ensures zero JSON corruption.
-- [ ] Confirm schema validation rejects malformed payloads (e.g., negative amounts).
-- [ ] **Push Phase to GitHub**:
+- [x] Run standalone test script that writes, reads, and updates `data/db.json`.
+- [x] Intentionally verify atomic file rename ensures zero JSON corruption.
+- [x] Confirm schema validation rejects malformed payloads (e.g., negative amounts).
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-1): implement atomic Lowdb JSON database layer with Zod validation"
@@ -378,7 +378,7 @@ flowchart TD
 | :--- | :--- | :--- |
 | **Initial Setup** | Documentation & Architecture Baseline | `COMPLETED` |
 | **Phase 0** | Project Scaffolding & Mobile Shell | `COMPLETED` |
-| **Phase 1** | Atomic Lowdb JSON Database Layer | `PENDING` |
+| **Phase 1** | Atomic Lowdb JSON Database Layer | `COMPLETED` |
 | **Phase 2** | Digital Wallet Hero & Transaction Ledger | `PENDING` |
 | **Phase 3** | The "Big 4" Quick Actions | `PENDING` |
 | **Phase 4** | Daily Routine Tracker & Daily Check-In | `PENDING` |
