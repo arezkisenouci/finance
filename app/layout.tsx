@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="bg-[#030712] min-h-screen text-slate-100 antialiased flex justify-center">
+        <ServiceWorkerRegister />
         {/* Mobile Viewport Container Shell */}
         <div className="w-full max-w-md min-h-screen bg-[#0B0F19] flex flex-col relative shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)] border-x border-slate-900/80">
           {children}

@@ -346,24 +346,24 @@ flowchart TD
 - `stack.md` Section 3.2 (PWA) & Section 4.
 
 ### Tasks
-- [ ] **PWA Configuration**:
+- [x] **PWA Configuration**:
   - Setup service worker with offline caching strategy for app shell and recent data.
   - Add Apple touch icons and splash screens in `public/icons/`.
   - Configure `manifest.json` for `display: "standalone"` and orientation lock.
-- [ ] **Database Backup & Restore UI**:
+- [x] **Database Backup & Restore UI**:
   - `GET /api/system/export` — trigger raw `db.json` download.
   - `POST /api/system/import` — file upload to restore database with pre-restore safety snapshot.
   - `SettingsDrawer`: UI controls to export backup or restore from file.
-- [ ] **Edge Case Hardening**:
+- [x] **Edge Case Hardening**:
   - Validate non-numeric or negative input values in forms using Zod.
   - Handle zero-transaction empty states with helpful illustrations.
   - Perform memory and bundle audit to ensure fast $< 1\text{s}$ load on mobile 4G.
 
 ### Verification & Git Gate
-- [ ] Install app to phone or Chrome desktop via "Install App" prompt.
-- [ ] Disconnect internet $\to$ app opens, shows cached balance, and allows viewing recent history without crashing.
-- [ ] Export `db.json`, modify it, and import it $\to$ app successfully validates and loads the imported state.
-- [ ] **Push Phase to GitHub**:
+- [x] Install app to phone or Chrome desktop via "Install App" prompt.
+- [x] Disconnect internet $\to$ app opens, shows cached balance, and allows viewing recent history without crashing.
+- [x] Export `db.json`, modify it, and import it $\to$ app successfully validates and loads the imported state.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-8): finalize PWA offline capabilities, backup export/import, and polish"
@@ -385,4 +385,4 @@ flowchart TD
 | **Phase 5** | What-If Habit & Savings Simulator | `COMPLETED` |
 | **Phase 6** | Live Multi-Currency Engine | `COMPLETED` |
 | **Phase 7** | Period Analytics Dashboard | `COMPLETED` |
-| **Phase 8** | PWA Offline & System Hardening | `PENDING` |
+| **Phase 8** | PWA Offline & System Hardening | `COMPLETED` |

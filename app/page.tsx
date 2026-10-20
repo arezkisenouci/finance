@@ -14,6 +14,7 @@ import { RoutinesManager } from "@/components/routines/RoutinesManager";
 import { WhatIfSimulatorView } from "@/components/simulator/WhatIfSimulatorView";
 import { AnalyticsView } from "@/components/analytics/AnalyticsView";
 import { CurrencyModal } from "@/components/currency/CurrencyModal";
+import { SettingsDrawer } from "@/components/settings/SettingsDrawer";
 import { Category, Transaction } from "@/types/database";
 import { Sparkles, TrendingUp } from "lucide-react";
 
@@ -36,6 +37,7 @@ export default function Home() {
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
   const [isAddFundsOpen, setIsAddFundsOpen] = useState<boolean>(false);
   const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [selectedQuickPreset, setSelectedQuickPreset] = useState<QuickActionPreset | null>(null);
   const [isKeypadOpen, setIsKeypadOpen] = useState<boolean>(false);
 
@@ -150,7 +152,7 @@ export default function Home() {
         currentCurrency={displayCurrency}
         onOpenCurrencySelector={() => setIsCurrencyModalOpen(true)}
         pendingRemindersCount={pendingRoutines.length}
-        onOpenSettings={() => alert("Settings & Backup drawer will open in Phase 8")}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -271,6 +273,13 @@ export default function Home() {
         selectedCurrency={displayCurrency}
         onSelectCurrency={setDisplayCurrency}
         rates={exchangeRates}
+      />
+
+      {/* Settings & JSON Backup Drawer */}
+      <SettingsDrawer
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onDataRestored={refreshAllData}
       />
     </div>
   );

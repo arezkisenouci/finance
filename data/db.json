@@ -2,7 +2,7 @@
   "wallet": {
     "balance": 3840.5,
     "baseCurrency": "USD",
-    "updatedAt": "2026-10-20T19:56:36.366Z"
+    "updatedAt": "2026-10-20T20:11:46.507Z"
   },
   "categories": [
     {
@@ -64,7 +64,7 @@
       "frequency": "DAILY",
       "reminderTime": "20:00",
       "isActive": true,
-      "createdAt": "2026-10-20T19:47:40.829Z"
+      "createdAt": "2026-10-20T20:11:46.508Z"
     }
   ],
   "routine_logs": [
@@ -74,7 +74,7 @@
       "date": "2026-10-19",
       "status": "SKIPPED",
       "savedAmount": 8,
-      "loggedAt": "2026-10-19T19:47:40.829Z"
+      "loggedAt": "2026-10-19T20:11:46.508Z"
     }
   ],
   "transactions": [
@@ -88,7 +88,7 @@
       "isQuickAction": false,
       "isRoutine": false,
       "isRefunded": false,
-      "date": "2026-10-18T19:47:40.829Z",
+      "date": "2026-10-18T20:11:46.508Z",
       "notes": "High performance workstation upgrade"
     },
     {
@@ -101,12 +101,12 @@
       "isQuickAction": false,
       "isRoutine": false,
       "isRefunded": false,
-      "date": "2026-10-19T19:47:40.829Z"
+      "date": "2026-10-19T20:11:46.508Z"
     }
   ],
   "exchange_rates_cache": {
     "base": "USD",
-    "updatedAt": "2026-10-20T19:47:40.829Z",
+    "updatedAt": "2026-10-20T20:11:46.508Z",
     "rates": {
       "EUR": 0.925,
       "GBP": 0.785,
