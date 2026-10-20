@@ -7,8 +7,10 @@ import { WalletCard } from "@/components/wallet/WalletCard";
 import { AddExpenseModal } from "@/components/wallet/AddExpenseModal";
 import { AddFundsModal } from "@/components/wallet/AddFundsModal";
 import { TransactionList } from "@/components/wallet/TransactionList";
+import { QuickActionsBar, QuickActionPreset } from "@/components/quick-actions/QuickActionsBar";
+import { QuickEntryKeypad } from "@/components/quick-actions/QuickEntryKeypad";
 import { Category, Transaction } from "@/types/database";
-import { Flame, Sparkles, TrendingUp, Croissant, Salad, Utensils, Car } from "lucide-react";
+import { Flame, Sparkles, TrendingUp } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<NavTab>("wallet");
@@ -19,11 +21,14 @@ export default function Home() {
   const [convertedBalances, setConvertedBalances] = useState<Record<string, number>>({});
   const [categories, setCategories] = useState<Category[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [quickPresets, setQuickPresets] = useState<QuickActionPreset[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Modal States
+  // Modal & Keypad States
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
   const [isAddFundsOpen, setIsAddFundsOpen] = useState<boolean>(false);
+  const [selectedQuickPreset, setSelectedQuickPreset] = useState<QuickActionPreset | null>(null);
+  const [isKeypadOpen, setIsKeypadOpen] = useState<boolean>(false);
 
   // Data Fetching
   const fetchWallet = useCallback(async () => {
@@ -64,15 +69,37 @@ export default function Home() {
     }
   }, []);
 
+  const fetchQuickPresets = useCallback(async () => {
+    try {
+      const res = await fetch("/api/quick-actions");
+      const json = await res.json();
+      if (json.success) {
+        setQuickPresets(json.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch quick presets:", err);
+    }
+  }, []);
+
   const refreshAllData = useCallback(async () => {
     setIsLoading(true);
-    await Promise.all([fetchWallet(), fetchTransactions(), fetchCategories()]);
+    await Promise.all([
+      fetchWallet(),
+      fetchTransactions(),
+      fetchCategories(),
+      fetchQuickPresets(),
+    ]);
     setIsLoading(false);
-  }, [fetchWallet, fetchTransactions, fetchCategories]);
+  }, [fetchWallet, fetchTransactions, fetchCategories, fetchQuickPresets]);
 
   useEffect(() => {
     refreshAllData();
   }, [refreshAllData]);
+
+  const handleOpenQuickKeypad = (preset: QuickActionPreset) => {
+    setSelectedQuickPreset(preset);
+    setIsKeypadOpen(true);
+  };
 
   return (
     <div className="flex flex-col flex-1 pb-20">
@@ -98,39 +125,10 @@ export default function Home() {
             />
 
             {/* 2. Quick Actions Row (The Big 4) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold tracking-wider text-slate-400 uppercase">
-                  ⚡ Quick Actions
-                </h3>
-                <span className="text-[11px] text-slate-500">1-Tap Fast Entry</span>
-              </div>
-
-              <div className="grid grid-cols-4 gap-2">
-                {[
-                  { id: "cat_breakfast", name: "Breakfast", icon: Croissant, color: "text-amber-400", bg: "bg-amber-500/10" },
-                  { id: "cat_lunch", name: "Lunch", icon: Salad, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-                  { id: "cat_dinner", name: "Dinner", icon: Utensils, color: "text-indigo-400", bg: "bg-indigo-500/10" },
-                  { id: "cat_transport", name: "Transport", icon: Car, color: "text-sky-400", bg: "bg-sky-500/10" },
-                ].map((action) => {
-                  const Icon = action.icon;
-                  return (
-                    <button
-                      key={action.id}
-                      onClick={() => alert(`Quick log keypad for ${action.name} (Phase 3)`)}
-                      className="flex flex-col items-center justify-center p-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition active:scale-95 group"
-                    >
-                      <div className={`p-2 rounded-xl ${action.bg} ${action.color} mb-1.5 transition group-hover:scale-110`}>
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <span className="text-[11px] font-medium text-slate-300 truncate w-full text-center">
-                        {action.name}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <QuickActionsBar
+              presets={quickPresets}
+              onSelectAction={handleOpenQuickKeypad}
+            />
 
             {/* 3. Daily Routine Reminder Prompt */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/30 shadow-md">
@@ -254,6 +252,14 @@ export default function Home() {
         isOpen={isAddFundsOpen}
         onClose={() => setIsAddFundsOpen(false)}
         onFundsAdded={refreshAllData}
+      />
+
+      {/* 1-Tap Quick Action Keypad Bottom Sheet */}
+      <QuickEntryKeypad
+        isOpen={isKeypadOpen}
+        onClose={() => setIsKeypadOpen(false)}
+        preset={selectedQuickPreset}
+        onSuccess={refreshAllData}
       />
     </div>
   );

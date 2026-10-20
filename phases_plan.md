@@ -179,10 +179,10 @@ flowchart TD
 - `system_design.md` Section 4.4 (Quick Actions Row).
 
 ### Tasks
-- [ ] **Backend Route Handlers**:
+- [x] **Backend Route Handlers**:
   - `GET /api/quick-actions` — returns the 4 categories (Breakfast, Lunch, Dinner, Transport) with default and historical average amounts.
   - `POST /api/quick-actions/log` — ultra-lightweight endpoint that takes `{ categoryId, amount, notes }`, logs the transaction, and deducts the balance.
-- [ ] **Frontend UI Components**:
+- [x] **Frontend UI Components**:
   - `QuickActionsBar`: Horizontal row of 4 tactile buttons on the home screen:
     - 🥐 **Breakfast**
     - 🥗 **Lunch**
@@ -192,9 +192,9 @@ flowchart TD
   - Visual feedback: Micro-haptic vibration (via `navigator.vibrate` if supported) and instant wallet balance decrement animation.
 
 ### Verification & Git Gate
-- [ ] Tap `[🥗 Lunch]` $\to$ bottom keypad opens in $< 100\text{ms}$.
-- [ ] Enter `$14.50` and hit `Confirm` $\to$ transaction is saved with `isQuickAction: true`, and the wallet balance updates immediately.
-- [ ] **Push Phase to GitHub**:
+- [x] Tap `[🥗 Lunch]` $\to$ bottom keypad opens in $< 100\text{ms}$.
+- [x] Enter `$14.50` and hit `Confirm` $\to$ transaction is saved with `isQuickAction: true`, and the wallet balance updates immediately.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-3): implement Big 4 quick actions with 1-tap mobile keypad"
@@ -380,7 +380,7 @@ flowchart TD
 | **Phase 0** | Project Scaffolding & Mobile Shell | `COMPLETED` |
 | **Phase 1** | Atomic Lowdb JSON Database Layer | `COMPLETED` |
 | **Phase 2** | Digital Wallet Hero & Transaction Ledger | `COMPLETED` |
-| **Phase 3** | The "Big 4" Quick Actions | `PENDING` |
+| **Phase 3** | The "Big 4" Quick Actions | `COMPLETED` |
 | **Phase 4** | Daily Routine Tracker & Daily Check-In | `PENDING` |
 | **Phase 5** | What-If Habit & Savings Simulator | `PENDING` |
 | **Phase 6** | Live Multi-Currency Engine | `PENDING` |
