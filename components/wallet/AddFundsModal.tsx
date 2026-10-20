@@ -1,15 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, ArrowDownLeft, Check } from "lucide-react";
+import { X, ArrowDownLeft } from "lucide-react";
+import { getCurrencySymbol } from "@/lib/utils";
 
 interface AddFundsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currency?: string;
   onFundsAdded: () => void;
 }
 
-export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalProps) {
+export function AddFundsModal({
+  isOpen,
+  onClose,
+  currency = "USD",
+  onFundsAdded,
+}: AddFundsModalProps) {
   const [title, setTitle] = useState("Monthly Salary Deposit");
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
@@ -17,6 +24,8 @@ export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalPr
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
+
+  const symbol = getCurrencySymbol(currency);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +45,7 @@ export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalPr
         body: JSON.stringify({
           title: title.trim(),
           amount: parsedAmount,
+          currency,
           category: "Income",
           date: new Date().toISOString(),
           notes: notes.trim() || undefined,
@@ -64,7 +74,9 @@ export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalPr
         <div className="flex items-center justify-between pb-3 border-b border-slate-800">
           <div>
             <h3 className="text-base font-bold text-white">Deposit Funds</h3>
-            <p className="text-xs text-slate-400">Credit salary or funds to your wallet</p>
+            <p className="text-xs text-slate-400">
+              Credit funds in <strong className="text-emerald-400">{currency} ({symbol.trim()})</strong>
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -83,11 +95,11 @@ export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalPr
         <form onSubmit={handleSubmit} className="mt-4 space-y-3.5">
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Deposit Amount ($)
+              Deposit Amount ({currency})
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                $
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-400 font-extrabold text-sm">
+                {symbol}
               </span>
               <input
                 type="number"
@@ -96,7 +108,7 @@ export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalPr
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 required
-                className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-bold text-lg focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition"
+                className="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-bold text-lg focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition"
               />
             </div>
           </div>
@@ -134,7 +146,11 @@ export function AddFundsModal({ isOpen, onClose, onFundsAdded }: AddFundsModalPr
             className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95 disabled:opacity-50 mt-4 shadow-lg shadow-emerald-950"
           >
             <ArrowDownLeft className="w-4 h-4" />
-            <span>{isSubmitting ? "Depositing..." : "Confirm Deposit"}</span>
+            <span>
+              {isSubmitting
+                ? "Depositing..."
+                : `Confirm Deposit ${symbol}${parseFloat(amount || "0").toFixed(2)}`}
+            </span>
           </button>
         </form>
       </div>

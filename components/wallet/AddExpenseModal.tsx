@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, DollarSign, Tag, FileText, Check } from "lucide-react";
+import { X, Check } from "lucide-react";
 import { Category } from "@/types/database";
+import { getCurrencySymbol } from "@/lib/utils";
 
 interface AddExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
   categories: Category[];
+  currency?: string;
   onExpenseAdded: () => void;
 }
 
@@ -15,6 +17,7 @@ export function AddExpenseModal({
   isOpen,
   onClose,
   categories,
+  currency = "USD",
   onExpenseAdded,
 }: AddExpenseModalProps) {
   const [title, setTitle] = useState("");
@@ -25,6 +28,8 @@ export function AddExpenseModal({
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
+
+  const symbol = getCurrencySymbol(currency);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +54,7 @@ export function AddExpenseModal({
         body: JSON.stringify({
           title: title.trim(),
           amount: parsedAmount,
+          currency,
           type: "EXPENSE",
           categoryId: categoryId || categories[0]?.id,
           date: new Date().toISOString(),
@@ -81,7 +87,9 @@ export function AddExpenseModal({
         <div className="flex items-center justify-between pb-3 border-b border-slate-800">
           <div>
             <h3 className="text-base font-bold text-white">Add New Expense</h3>
-            <p className="text-xs text-slate-400">Deduct directly from your wallet balance</p>
+            <p className="text-xs text-slate-400">
+              Entering amount in <strong className="text-emerald-400">{currency} ({symbol.trim()})</strong>
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -99,14 +107,14 @@ export function AddExpenseModal({
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="mt-4 space-y-3.5">
-          {/* Amount Input */}
+          {/* Amount Input with Dynamic Currency Symbol */}
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Amount ($)
+              Amount ({currency})
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                $
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-400 font-extrabold text-sm">
+                {symbol}
               </span>
               <input
                 type="number"
@@ -115,7 +123,7 @@ export function AddExpenseModal({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 required
-                className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-bold text-lg focus:outline-none focus:border-rose-500/60 focus:ring-1 focus:ring-rose-500/60 transition"
+                className="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white font-bold text-lg focus:outline-none focus:border-rose-500/60 focus:ring-1 focus:ring-rose-500/60 transition"
               />
             </div>
           </div>
@@ -176,7 +184,11 @@ export function AddExpenseModal({
             className="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95 disabled:opacity-50 mt-4 shadow-lg shadow-rose-950"
           >
             <Check className="w-4 h-4" />
-            <span>{isSubmitting ? "Deducting..." : "Confirm & Cut from Balance"}</span>
+            <span>
+              {isSubmitting
+                ? "Deducting..."
+                : `Confirm & Cut ${symbol}${parseFloat(amount || "0").toFixed(2)}`}
+            </span>
           </button>
         </form>
       </div>

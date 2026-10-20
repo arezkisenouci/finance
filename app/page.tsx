@@ -174,12 +174,16 @@ export default function Home() {
             {/* 2. Quick Actions Row (The Big 4) */}
             <QuickActionsBar
               presets={quickPresets}
+              displayCurrency={displayCurrency}
+              exchangeRate={activeExchangeRate}
               onSelectAction={handleOpenQuickKeypad}
             />
 
             {/* 3. Daily Routine Reminder Prompt */}
             <DailyReminderBanner
               pendingRoutines={pendingRoutines}
+              displayCurrency={displayCurrency}
+              exchangeRate={activeExchangeRate}
               onCheckInCompleted={refreshAllData}
             />
 
@@ -217,6 +221,8 @@ export default function Home() {
 
               <TransactionList
                 transactions={transactions}
+                displayCurrency={displayCurrency}
+                exchangeRate={activeExchangeRate}
                 onTransactionMutated={refreshAllData}
                 isLoading={isLoading}
               />
@@ -232,7 +238,11 @@ export default function Home() {
         )}
 
         {activeTab === "routines" && (
-          <RoutinesManager onDataChanged={refreshAllData} />
+          <RoutinesManager
+            displayCurrency={displayCurrency}
+            exchangeRate={activeExchangeRate}
+            onDataChanged={refreshAllData}
+          />
         )}
 
         {activeTab === "simulator" && (
@@ -243,18 +253,20 @@ export default function Home() {
       {/* Persistent Bottom Navigation Bar */}
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* Add Expense Modal */}
+      {/* Add Expense Modal with Dynamic Currency Input */}
       <AddExpenseModal
         isOpen={isAddExpenseOpen}
         onClose={() => setIsAddExpenseOpen(false)}
         categories={categories}
+        currency={displayCurrency}
         onExpenseAdded={refreshAllData}
       />
 
-      {/* Add Funds Modal */}
+      {/* Add Funds Modal with Dynamic Currency Input */}
       <AddFundsModal
         isOpen={isAddFundsOpen}
         onClose={() => setIsAddFundsOpen(false)}
+        currency={displayCurrency}
         onFundsAdded={refreshAllData}
       />
 
@@ -263,6 +275,8 @@ export default function Home() {
         isOpen={isKeypadOpen}
         onClose={() => setIsKeypadOpen(false)}
         preset={selectedQuickPreset}
+        currency={displayCurrency}
+        exchangeRate={activeExchangeRate}
         onSuccess={refreshAllData}
       />
 

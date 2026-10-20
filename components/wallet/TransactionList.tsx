@@ -15,17 +15,20 @@ import {
   Flame,
   ArrowDownLeft,
   Receipt,
-  CheckCircle2,
 } from "lucide-react";
 
 interface TransactionListProps {
   transactions: Transaction[];
+  displayCurrency?: string;
+  exchangeRate?: number;
   onTransactionMutated: () => void;
   isLoading?: boolean;
 }
 
 export function TransactionList({
   transactions,
+  displayCurrency = "USD",
+  exchangeRate = 1,
   onTransactionMutated,
   isLoading = false,
 }: TransactionListProps) {
@@ -74,7 +77,7 @@ export function TransactionList({
 
   const handleRefund = async (id: string, title: string) => {
     const reason = prompt(`Return / Refund "${title}":\n\nEnter refund reason or tap OK to confirm.`);
-    if (reason === null) return; // User cancelled prompt
+    if (reason === null) return;
 
     setActingId(id);
     try {
@@ -122,6 +125,9 @@ export function TransactionList({
         const isRefund = tx.type === "REFUND";
         const isBusy = actingId === tx.id;
 
+        // Convert transaction amount based on active display currency
+        const convertedAmount = tx.amount * exchangeRate;
+
         return (
           <div
             key={tx.id}
@@ -166,14 +172,15 @@ export function TransactionList({
                 </div>
               </div>
 
-              {/* Amount */}
+              {/* Amount Displayed in Active Display Currency */}
               <div className="text-right shrink-0">
                 <p
                   className={`text-xs font-bold ${
                     isIncome || isRefund ? "text-emerald-400" : "text-rose-400"
                   }`}
                 >
-                  {isIncome || isRefund ? "+" : "-"}${tx.amount.toFixed(2)}
+                  {isIncome || isRefund ? "+" : "-"}
+                  {formatCurrency(convertedAmount, displayCurrency)}
                 </p>
                 <p className="text-[10px] text-slate-500 font-medium">{tx.type}</p>
               </div>

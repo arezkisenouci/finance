@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Croissant, Salad, Utensils, Car } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 export interface QuickActionPreset {
   id: string;
@@ -13,10 +14,17 @@ export interface QuickActionPreset {
 
 interface QuickActionsBarProps {
   presets: QuickActionPreset[];
+  displayCurrency?: string;
+  exchangeRate?: number;
   onSelectAction: (preset: QuickActionPreset) => void;
 }
 
-export function QuickActionsBar({ presets, onSelectAction }: QuickActionsBarProps) {
+export function QuickActionsBar({
+  presets,
+  displayCurrency = "USD",
+  exchangeRate = 1,
+  onSelectAction,
+}: QuickActionsBarProps) {
   const getActionStyles = (id: string) => {
     switch (id) {
       case "cat_breakfast":
@@ -70,7 +78,7 @@ export function QuickActionsBar({ presets, onSelectAction }: QuickActionsBarProp
         {presets.map((preset) => {
           const styles = getActionStyles(preset.id);
           const Icon = styles.icon;
-          const displayAvg = preset.recentAverage || preset.defaultAmount;
+          const displayAvg = (preset.recentAverage || preset.defaultAmount) * exchangeRate;
 
           return (
             <button
@@ -87,7 +95,7 @@ export function QuickActionsBar({ presets, onSelectAction }: QuickActionsBarProp
                 {preset.name}
               </span>
               <span className="text-[9px] text-slate-400 mt-0.5 font-medium">
-                ~${displayAvg.toFixed(2)}
+                ~{formatCurrency(displayAvg, displayCurrency)}
               </span>
             </button>
           );

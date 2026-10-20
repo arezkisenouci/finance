@@ -291,10 +291,17 @@ flowchart TD
   - `CurrencySelector`: Compact dropdown pill in the top header (`[USD ▼]`, `[EUR ▼]`, `[GBP ▼]`, `[JPY ▼]`, `[DZD ▼]`, etc.).
   - Secondary currency badge on the wallet card (e.g., `$3,840.50 USD ≈ €3,552.46 EUR`).
   - Toggle to preview transactions in the selected currency.
+  - **Dynamic Currency Input Display & Multi-Currency Mutation**:
+    - `AddExpenseModal` & `AddFundsModal`: Amount input prefix dynamically displays the active currency symbol (`€`, `£`, `DA`, `DH`, `¥`, `$`) and currency badge.
+    - `QuickEntryKeypad`: Currency symbol in keypad display and dynamically calculated quick preset increment chips scaled for chosen currency.
+    - `QuickActionsBar`: 1-tap quick action average costs converted and formatted in active currency.
+    - `DailyReminderBanner` & `RoutinesManager`: Habit cost & savings previews dynamically converted to active currency.
+    - Backend API mutation handlers (`/api/transactions`, `/api/quick-actions/log`, `/api/wallet/deposit`): Accept entered currency, converting to wallet base currency based on live rates before updating balance to guarantee ledger integrity.
 
 ### Verification & Git Gate
 - [x] Query rates while offline or simulate API failure $\to$ system seamlessly serves cached rates from `db.json`.
 - [x] Switch currency to `EUR` $\to$ wallet hero and transactions accurately display converted amounts using the cached rate.
+- [x] Switch currency to `EUR` or `DZD` $\to$ Add Expense, Add Funds, and Quick Keypad display `€` / `DA` currency symbols when typing amounts and convert back to base currency properly.
 - [x] **Push Phase to GitHub**:
   ```bash
   git add .
@@ -386,3 +393,4 @@ flowchart TD
 | **Phase 6** | Live Multi-Currency Engine | `COMPLETED` |
 | **Phase 7** | Period Analytics Dashboard | `COMPLETED` |
 | **Phase 8** | PWA Offline & System Hardening | `COMPLETED` |
+| **Enhancement** | Dynamic Currency Symbols on Amount Entry & Live Conversion | `COMPLETED` |

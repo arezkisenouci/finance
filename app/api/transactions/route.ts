@@ -6,6 +6,7 @@ import { z } from "zod";
 const CreateTransactionSchema = z.object({
   title: z.string().min(1, "Title is required"),
   amount: z.number().positive("Amount must be positive"),
+  currency: z.string().optional(),
   type: TransactionTypeSchema.default("EXPENSE"),
   categoryId: z.string(),
   isQuickAction: z.boolean().default(false),
@@ -30,23 +31,20 @@ export async function GET(request: NextRequest) {
 
     let transactions = [...db.transactions];
 
-    // Filter by type
     if (type) {
       transactions = transactions.filter((t) => t.type === type);
     }
 
-    // Filter by category
     if (categoryId) {
       transactions = transactions.filter((t) => t.categoryId === categoryId);
     }
 
-    // Filter by date / period
     const now = new Date();
     if (period === "today") {
       const todayStr = now.toISOString().split("T")[0];
       transactions = transactions.filter((t) => t.date.startsWith(todayStr));
     } else if (period === "this_week") {
-      const dayOfWeek = now.getDay() || 7; // Monday = 1
+      const dayOfWeek = now.getDay() || 7;
       const startOfWeek = new Date(now);
       startOfWeek.setDate(now.getDate() - dayOfWeek + 1);
       startOfWeek.setHours(0, 0, 0, 0);
@@ -66,7 +64,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Sort descending by date
     transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     const totalCount = transactions.length;
@@ -104,10 +101,21 @@ export async function POST(request: NextRequest) {
       const category = db.categories.find((c) => c.id === validated.categoryId);
       const categoryName = category ? category.name : "General";
 
+      // Currency conversion handling:
+      // If user typed amount in e.g. EUR while base is USD, convert to base
+      let amountInBase = validated.amount;
+      const inputCurrency = (validated.currency || db.wallet.baseCurrency).toUpperCase();
+      const baseCurrency = (db.wallet.baseCurrency || "USD").toUpperCase();
+
+      if (inputCurrency !== baseCurrency) {
+        const rate = db.exchange_rates_cache.rates?.[inputCurrency] || 1;
+        amountInBase = parseFloat((validated.amount / rate).toFixed(2));
+      }
+
       createdTransaction = {
         id: transactionId,
         title: validated.title,
-        amount: validated.amount,
+        amount: amountInBase,
         type: validated.type,
         categoryId: validated.categoryId,
         categoryName,
@@ -116,14 +124,19 @@ export async function POST(request: NextRequest) {
         routineId: validated.routineId,
         isRefunded: false,
         date: validated.date || new Date().toISOString(),
-        notes: validated.notes,
+        notes: validated.notes
+          ? inputCurrency !== baseCurrency
+            ? `${validated.notes} (Entered as ${validated.amount} ${inputCurrency})`
+            : validated.notes
+          : inputCurrency !== baseCurrency
+          ? `Entered as ${validated.amount} ${inputCurrency}`
+          : undefined,
       };
 
-      // Mutate wallet balance
       if (validated.type === "EXPENSE") {
-        updatedBalance = parseFloat((db.wallet.balance - validated.amount).toFixed(2));
+        updatedBalance = parseFloat((db.wallet.balance - amountInBase).toFixed(2));
       } else {
-        updatedBalance = parseFloat((db.wallet.balance + validated.amount).toFixed(2));
+        updatedBalance = parseFloat((db.wallet.balance + amountInBase).toFixed(2));
       }
 
       db.wallet.balance = updatedBalance;

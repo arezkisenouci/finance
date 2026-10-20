@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Flame, CheckCircle, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
+import { formatCurrency } from "@/lib/utils";
 
 export interface PendingRoutine {
   id: string;
@@ -13,14 +14,18 @@ export interface PendingRoutine {
 
 interface DailyReminderBannerProps {
   pendingRoutines: PendingRoutine[];
+  displayCurrency?: string;
+  exchangeRate?: number;
   onCheckInCompleted: () => void;
 }
 
 export function DailyReminderBanner({
   pendingRoutines,
+  displayCurrency = "USD",
+  exchangeRate = 1,
   onCheckInCompleted,
 }: DailyReminderBannerProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [celebrationMsg, setCelebrationMsg] = useState("");
 
@@ -39,6 +44,8 @@ export function DailyReminderBanner({
   }
 
   const routine = pendingRoutines[currentIndex] || pendingRoutines[0];
+  const convertedCost = routine.cost * exchangeRate;
+  const formattedCost = formatCurrency(convertedCost, displayCurrency);
 
   const handleAction = async (action: "CONFIRMED" | "SKIPPED") => {
     setIsSubmitting(true);
@@ -53,7 +60,6 @@ export function DailyReminderBanner({
       if (!res.ok) throw new Error(json.error || "Failed to process check-in");
 
       if (action === "SKIPPED") {
-        // Trigger celebratory confetti burst!
         confetti({
           particleCount: 80,
           spread: 60,
@@ -61,7 +67,7 @@ export function DailyReminderBanner({
           colors: ["#10B981", "#6366F1", "#F59E0B"],
         });
 
-        setCelebrationMsg(`🎉 Saved $${routine.cost.toFixed(2)} today! Streak: ${json.data.cleanStreakDays} days!`);
+        setCelebrationMsg(`🎉 Saved ${formattedCost} today! Streak: ${json.data.cleanStreakDays} days!`);
         setTimeout(() => {
           setCelebrationMsg("");
           onCheckInCompleted();
@@ -100,7 +106,7 @@ export function DailyReminderBanner({
           </div>
 
           <p className="text-xs font-semibold text-slate-100">
-            {routine.promptMessage}
+            Did you buy {routine.title.toLowerCase()} today ({formattedCost})?
           </p>
 
           <div className="flex items-center gap-2 mt-3">

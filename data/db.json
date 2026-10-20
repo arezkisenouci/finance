@@ -1,8 +1,8 @@
 {
   "wallet": {
-    "balance": 3840.5,
+    "balance": 3682.5,
     "baseCurrency": "USD",
-    "updatedAt": "2026-10-20T20:11:46.507Z"
+    "updatedAt": "2026-10-20T20:17:23.870Z"
   },
   "categories": [
     {
@@ -69,6 +69,15 @@
   ],
   "routine_logs": [
     {
+      "id": "rtl_1792527443874_oyg5",
+      "routineId": "rt_cigg_001",
+      "date": "2026-10-20",
+      "status": "CONFIRMED",
+      "transactionId": "tx_rt_1792527443874_h31q",
+      "savedAmount": 0,
+      "loggedAt": "2026-10-20T20:17:23.870Z"
+    },
+    {
       "id": "rtl_sample_01",
       "routineId": "rt_cigg_001",
       "date": "2026-10-19",
@@ -78,6 +87,32 @@
     }
   ],
   "transactions": [
+    {
+      "id": "tx_rt_1792527443874_h31q",
+      "title": "Packet of Cigarettes",
+      "amount": 8,
+      "type": "EXPENSE",
+      "categoryId": "cat_habits",
+      "categoryName": "Habits & Routines",
+      "isQuickAction": false,
+      "isRoutine": true,
+      "routineId": "rt_cigg_001",
+      "isRefunded": false,
+      "date": "2026-10-20T20:17:23.870Z",
+      "notes": "Daily routine check-in"
+    },
+    {
+      "id": "tx_quick_1792527409809_f93k",
+      "title": "Quick Breakfast",
+      "amount": 150,
+      "type": "EXPENSE",
+      "categoryId": "cat_breakfast",
+      "categoryName": "Breakfast",
+      "isQuickAction": true,
+      "isRoutine": false,
+      "isRefunded": false,
+      "date": "2026-10-20T20:16:49.824Z"
+    },
     {
       "id": "tx_init_001",
       "title": "Custom Gaming PC Build",

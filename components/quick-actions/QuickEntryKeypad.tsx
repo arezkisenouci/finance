@@ -3,11 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { X, Delete, Check, Sparkles } from "lucide-react";
 import { QuickActionPreset } from "./QuickActionsBar";
+import { getCurrencySymbol } from "@/lib/utils";
 
 interface QuickEntryKeypadProps {
   isOpen: boolean;
   onClose: () => void;
   preset: QuickActionPreset | null;
+  currency?: string;
+  exchangeRate?: number;
   onSuccess: () => void;
 }
 
@@ -15,6 +18,8 @@ export function QuickEntryKeypad({
   isOpen,
   onClose,
   preset,
+  currency = "USD",
+  exchangeRate = 1,
   onSuccess,
 }: QuickEntryKeypadProps) {
   const [amountStr, setAmountStr] = useState<string>("");
@@ -22,14 +27,16 @@ export function QuickEntryKeypad({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
+  const symbol = getCurrencySymbol(currency);
+
   useEffect(() => {
     if (preset) {
-      const avg = preset.recentAverage || preset.defaultAmount;
+      const avg = (preset.recentAverage || preset.defaultAmount) * exchangeRate;
       setAmountStr(avg.toFixed(2));
       setNotes("");
       setError("");
     }
-  }, [preset]);
+  }, [preset, exchangeRate]);
 
   if (!isOpen || !preset) return null;
 
@@ -56,14 +63,12 @@ export function QuickEntryKeypad({
       return;
     }
 
-    // Limit to two decimal places
     if (amountStr.includes(".")) {
       const parts = amountStr.split(".");
       if (parts[1]?.length >= 2) return;
     }
 
-    // Max amount limit
-    if (parseFloat(amountStr + char) > 99999) return;
+    if (parseFloat(amountStr + char) > 9999999) return;
 
     setAmountStr((prev) => (prev === "0" ? char : prev + char));
   };
@@ -76,7 +81,7 @@ export function QuickEntryKeypad({
 
   const handleResetAvg = () => {
     triggerHaptic();
-    const avg = preset.recentAverage || preset.defaultAmount;
+    const avg = (preset.recentAverage || preset.defaultAmount) * exchangeRate;
     setAmountStr(avg.toFixed(2));
   };
 
@@ -98,6 +103,7 @@ export function QuickEntryKeypad({
         body: JSON.stringify({
           categoryId: preset.id,
           amount: parsedAmount,
+          currency,
           notes: notes.trim() || undefined,
         }),
       });
@@ -116,6 +122,9 @@ export function QuickEntryKeypad({
     }
   };
 
+  // Quick chips scaled reasonably based on currency
+  const chipStep = exchangeRate > 50 ? 100 : exchangeRate > 5 ? 10 : 1;
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/80 backdrop-blur-sm animate-fadeIn">
       <div className="w-full max-w-md bg-[#0F172A] border-t border-x border-slate-800 rounded-t-3xl p-5 shadow-2xl flex flex-col">
@@ -123,7 +132,7 @@ export function QuickEntryKeypad({
         <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              Quick Log: {preset.name}
+              Quick Log: {preset.name} ({currency})
             </span>
           </div>
           <button
@@ -140,40 +149,45 @@ export function QuickEntryKeypad({
           </div>
         )}
 
-        {/* Large Amount Display */}
+        {/* Large Amount Display with Chosen Currency Symbol */}
         <div className="py-4 text-center">
-          <span className="text-xl font-bold text-slate-400 mr-1">$</span>
+          <span className="text-2xl font-black text-emerald-400 mr-1.5">
+            {symbol}
+          </span>
           <span className="text-4xl font-extrabold tracking-tight text-white">
             {amountStr || "0.00"}
+          </span>
+          <span className="text-xs text-slate-400 font-semibold ml-2">
+            {currency}
           </span>
         </div>
 
         {/* Quick Add Chips */}
-        <div className="flex items-center justify-center gap-1.5 mb-3">
+        <div className="flex items-center justify-center gap-1.5 mb-3 flex-wrap">
           <button
-            onClick={() => handleAddAmount(1)}
+            onClick={() => handleAddAmount(chipStep * 1)}
             className="px-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700/60 active:scale-95 transition"
           >
-            +$1
+            +{chipStep * 1} {currency}
           </button>
           <button
-            onClick={() => handleAddAmount(5)}
+            onClick={() => handleAddAmount(chipStep * 5)}
             className="px-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700/60 active:scale-95 transition"
           >
-            +$5
+            +{chipStep * 5} {currency}
           </button>
           <button
-            onClick={() => handleAddAmount(10)}
+            onClick={() => handleAddAmount(chipStep * 10)}
             className="px-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700/60 active:scale-95 transition"
           >
-            +$10
+            +{chipStep * 10} {currency}
           </button>
           <button
             onClick={handleResetAvg}
             className="px-2.5 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/30 active:scale-95 transition flex items-center gap-1"
           >
             <Sparkles className="w-3 h-3" />
-            <span>Avg (~${(preset.recentAverage || preset.defaultAmount).toFixed(0)})</span>
+            <span>Avg</span>
           </button>
         </div>
 
@@ -209,7 +223,9 @@ export function QuickEntryKeypad({
         >
           <Check className="w-4 h-4" />
           <span>
-            {isSubmitting ? "Deducting..." : `Confirm & Pay $${parseFloat(amountStr || "0").toFixed(2)}`}
+            {isSubmitting
+              ? "Deducting..."
+              : `Confirm & Pay ${symbol}${parseFloat(amountStr || "0").toFixed(2)}`}
           </span>
         </button>
       </div>

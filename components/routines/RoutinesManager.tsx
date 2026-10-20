@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Flame, Sparkles, Trash2, CheckCircle2, Pause, Play, Clock, DollarSign, X } from "lucide-react";
+import { Plus, Flame, Sparkles, Trash2, Pause, Play, X } from "lucide-react";
+import { formatCurrency, getCurrencySymbol } from "@/lib/utils";
 
 interface RoutineWithStats {
   id: string;
@@ -17,7 +18,17 @@ interface RoutineWithStats {
   };
 }
 
-export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }) {
+interface RoutinesManagerProps {
+  displayCurrency?: string;
+  exchangeRate?: number;
+  onDataChanged: () => void;
+}
+
+export function RoutinesManager({
+  displayCurrency = "USD",
+  exchangeRate = 1,
+  onDataChanged,
+}: RoutinesManagerProps) {
   const [routines, setRoutines] = useState<RoutineWithStats[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -27,6 +38,8 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
   const [cost, setCost] = useState("");
   const [reminderTime, setReminderTime] = useState("20:00");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const symbol = getCurrencySymbol(displayCurrency);
 
   const fetchRoutines = async () => {
     setIsLoading(true);
@@ -89,6 +102,9 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
       return;
     }
 
+    // Convert cost to base USD if entered in another currency
+    const costInBase = parseFloat((parsedCost / exchangeRate).toFixed(2));
+
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/routines", {
@@ -96,7 +112,7 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title.trim(),
-          cost: parsedCost,
+          cost: costInBase,
           categoryId: "cat_habits",
           frequency: "DAILY",
           reminderTime,
@@ -144,7 +160,7 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
 
         <div className="my-2">
           <span className="text-3xl font-extrabold text-white">
-            ${totalSavedMonth.toFixed(2)}
+            {formatCurrency(totalSavedMonth * exchangeRate, displayCurrency)}
           </span>
           <span className="text-xs text-emerald-400 font-semibold ml-2">
             Saved by skipping habits!
@@ -178,6 +194,10 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
         ) : (
           routines.map((routine) => {
             const streak = routine.stats?.currentStreakSkipped || 0;
+            const convertedCost = routine.cost * exchangeRate;
+            const savedThisMonthConverted = (routine.stats?.totalSavedThisMonth || 0) * exchangeRate;
+            const spentThisMonthConverted = (routine.stats?.totalSpentThisMonth || 0) * exchangeRate;
+
             return (
               <div
                 key={routine.id}
@@ -193,7 +213,7 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
                     <div>
                       <h4 className="text-xs font-bold text-white">{routine.title}</h4>
                       <p className="text-[10px] text-slate-400">
-                        ${routine.cost.toFixed(2)} / day • Reminder at {routine.reminderTime}
+                        {formatCurrency(convertedCost, displayCurrency)} / day • Reminder at {routine.reminderTime}
                       </p>
                     </div>
                   </div>
@@ -211,13 +231,13 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
                     <span>
                       Saved this month:{" "}
                       <strong className="text-emerald-400">
-                        ${(routine.stats?.totalSavedThisMonth || 0).toFixed(2)}
+                        {formatCurrency(savedThisMonthConverted, displayCurrency)}
                       </strong>
                     </span>
                     <span>
                       Spent:{" "}
                       <strong className="text-rose-400">
-                        ${(routine.stats?.totalSpentThisMonth || 0).toFixed(2)}
+                        {formatCurrency(spentThisMonthConverted, displayCurrency)}
                       </strong>
                     </span>
                   </div>
@@ -250,7 +270,10 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-md bg-[#0F172A] border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-sm font-bold text-white">Create Daily Routine Habit</h3>
+              <div>
+                <h3 className="text-sm font-bold text-white">Create Daily Routine Habit</h3>
+                <p className="text-[11px] text-slate-400">Cost in {displayCurrency} ({symbol.trim()})</p>
+              </div>
               <button
                 onClick={() => setIsAddOpen(false)}
                 className="p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-white"
@@ -276,17 +299,22 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Daily Cost ($)
+                  Daily Cost ({displayCurrency})
                 </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="8.00"
-                  value={cost}
-                  onChange={(e) => setCost(e.target.value)}
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-medium focus:outline-none focus:border-amber-500/50"
-                />
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 font-extrabold text-sm">
+                    {symbol}
+                  </span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="8.00"
+                    value={cost}
+                    onChange={(e) => setCost(e.target.value)}
+                    required
+                    className="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-medium focus:outline-none focus:border-amber-500/50"
+                  />
+                </div>
               </div>
 
               <div>
@@ -306,7 +334,7 @@ export function RoutinesManager({ onDataChanged }: { onDataChanged: () => void }
                 disabled={isSubmitting}
                 className="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition active:scale-95 disabled:opacity-50 mt-4 shadow-lg shadow-amber-950"
               >
-                {isSubmitting ? "Creating..." : "Save Routine & Activate Prompt"}
+                {isSubmitting ? "Creating..." : `Save Routine & Activate Prompt (${symbol}${parseFloat(cost || "0").toFixed(2)})`}
               </button>
             </form>
           </div>
