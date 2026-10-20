@@ -313,11 +313,11 @@ flowchart TD
 - `system_design.md` Section 4.5 (Filter & Period Analytics Engine).
 
 ### Tasks
-- [ ] **Backend Route Handlers**:
+- [x] **Backend Route Handlers**:
   - `GET /api/analytics/summary` — computes total income, total spent, net savings, and routine vs discretionary split for a given period.
   - `GET /api/analytics/quick-four` — isolates spending and percentages for the 4 quick categories (Breakfast, Lunch, Dinner, Transport).
   - `GET /api/analytics/categories` — returns full category rankings and percentage distributions.
-- [ ] **Frontend UI Components**:
+- [x] **Frontend UI Components**:
   - `PeriodTabs`: Mobile segmented control: `[ Today ] [ This Week ] [ This Month ] [ Custom Range ]`.
   - `CustomDateRangePicker`: Mobile-friendly date picker bottom sheet.
   - `QuickFourBreakdownGrid`: 4 interactive stat cards displaying spend, count, and percentage of food/transport budget.
@@ -325,10 +325,10 @@ flowchart TD
   - `SpendingVelocityBarChart`: Daily spending bars showing high-spend spikes vs low-spend days.
 
 ### Verification & Git Gate
-- [ ] Select `This Month` $\to$ verify that the sum of all expenses in the month matches the total reported.
-- [ ] Verify the Quick 4 Breakdown reflects all transactions categorized under Breakfast, Lunch, Dinner, and Transport.
-- [ ] Test `Custom Range` with arbitrary dates $\to$ data updates accurately.
-- [ ] **Push Phase to GitHub**:
+- [x] Select `This Month` $\to$ verify that the sum of all expenses in the month matches the total reported.
+- [x] Verify the Quick 4 Breakdown reflects all transactions categorized under Breakfast, Lunch, Dinner, and Transport.
+- [x] Test `Custom Range` with arbitrary dates $\to$ data updates accurately.
+- [x] **Push Phase to GitHub**:
   ```bash
   git add .
   git commit -m "feat(phase-7): build period analytics dashboard with Big 4 category breakdowns"
@@ -384,5 +384,5 @@ flowchart TD
 | **Phase 4** | Daily Routine Tracker & Daily Check-In | `COMPLETED` |
 | **Phase 5** | What-If Habit & Savings Simulator | `COMPLETED` |
 | **Phase 6** | Live Multi-Currency Engine | `COMPLETED` |
-| **Phase 7** | Period Analytics Dashboard | `PENDING` |
+| **Phase 7** | Period Analytics Dashboard | `COMPLETED` |
 | **Phase 8** | PWA Offline & System Hardening | `PENDING` |

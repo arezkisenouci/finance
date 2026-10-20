@@ -12,6 +12,7 @@ import { QuickEntryKeypad } from "@/components/quick-actions/QuickEntryKeypad";
 import { DailyReminderBanner, PendingRoutine } from "@/components/routines/DailyReminderBanner";
 import { RoutinesManager } from "@/components/routines/RoutinesManager";
 import { WhatIfSimulatorView } from "@/components/simulator/WhatIfSimulatorView";
+import { AnalyticsView } from "@/components/analytics/AnalyticsView";
 import { CurrencyModal } from "@/components/currency/CurrencyModal";
 import { Category, Transaction } from "@/types/database";
 import { Sparkles, TrendingUp } from "lucide-react";
@@ -222,13 +223,10 @@ export default function Home() {
         )}
 
         {activeTab === "analytics" && (
-          <div className="p-8 text-center text-slate-400 space-y-2">
-            <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300">
-              <TrendingUp className="w-6 h-6 text-emerald-400" />
-            </div>
-            <h3 className="text-sm font-semibold text-slate-200">Analytics Dashboard</h3>
-            <p className="text-xs">Period breakdowns (Day, Week, Month, Custom) with Big 4 category charts will be connected in Phase 7.</p>
-          </div>
+          <AnalyticsView
+            displayCurrency={displayCurrency}
+            exchangeRate={activeExchangeRate}
+          />
         )}
 
         {activeTab === "routines" && (
